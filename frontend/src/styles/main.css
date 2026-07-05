@@ -203,6 +203,8 @@ a:hover { color: var(--primary-dark); }
 .typing-cursor::after { content: '▊'; animation: blink 1s step-end infinite; color: var(--primary); }
 @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0; } }
 .msg-time { font-size: 10px; color: var(--text-light); margin-top: 4px; text-align: right; }
+.btn-save-plan { margin-top: 8px; padding: 4px 12px; background: var(--gradient-primary); color: #fff; border: none; border-radius: 12px; font-size: 12px; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+.btn-save-plan:hover { transform: translateY(-1px); box-shadow: 0 2px 8px rgba(14,165,233,0.3); }
 
 /* Chat Input */
 .chat-input-area { padding: 16px 24px; background: #fff; border-top: 1px solid var(--border); }

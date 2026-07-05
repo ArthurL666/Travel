@@ -16,6 +16,8 @@
             <div v-else>{{ msg.content }}</div>
             <div v-if="typing && idx === messages.length-1 && !msg.content" class="typing-cursor"></div>
             <div class="msg-time">{{ fmtTime(msg.timestamp) }}</div>
+            <button v-if="msg.role === 'assistant' && msg.content && !(typing && idx === messages.length-1)"
+              class="btn-save-plan" @click="savePlan(msg)">💾 保存行程</button>
           </div>
         </div>
       </div>
@@ -42,6 +44,8 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useChat } from '../composables/useChat'
+import api from '../api'
+import { useToast } from '../composables/useToast'
 
 const msgContainer = ref(null)
 const {
@@ -49,6 +53,28 @@ const {
   init, send, sendHint, onKeydown,
   renderMd, fmtTime, scrollTo
 } = useChat()
+
+const toast = useToast()
+
+async function savePlan(msg) {
+  // 尝试从消息内容中提取城市和天数
+  let city = ''
+  let days = null
+  const cityMatch = msg.content.match(/[一-龥]{2,4}(?=\s*\d{1,2}天)/)
+  const daysMatch = msg.content.match(/(\d+)\s*天/)
+  if (cityMatch) city = cityMatch[0]
+  if (daysMatch) days = parseInt(daysMatch[1])
+  // 兜底：让用户输入
+  if (!city) city = prompt('请输入目的地城市：')
+  if (!days) days = parseInt(prompt('请输入旅行天数：') || '0')
+  if (!city || !days) { toast.error('保存失败：城市或天数不能为空'); return }
+  try {
+    await api.post('/api/chat/plan/save', { city, days, content: msg.content, preferences: '' })
+    toast.success('✅ 行程已保存到「我的行程」')
+  } catch (e) {
+    toast.error('保存失败，请重试')
+  }
+}
 
 onMounted(() => {
   init()
