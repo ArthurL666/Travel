@@ -10,7 +10,7 @@
             <circle cx="32" cy="46" r="4" fill="#FBBF24"/>
           </svg>
         </span>
-        <div class="sidebar-title">AI 旅游助手</div>
+        <div class="sidebar-title">游伴AI</div>
       </div>
       <nav class="sidebar-nav">
         <button

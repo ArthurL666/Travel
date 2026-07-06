@@ -3,7 +3,7 @@
     <div class="page-header" style="display:flex;align-items:center;justify-content:space-between;">
       <div>
         <h2>📋 历史对话记录</h2>
-        <p>查看您与AI旅游助手的对话历史</p>
+        <p>查看您与游伴AI的对话历史</p>
       </div>
       <button v-if="messages.length" class="btn btn-outline btn-sm" @click="clearAll">🗑️ 清空记录</button>
     </div>
