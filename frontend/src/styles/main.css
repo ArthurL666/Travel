@@ -114,21 +114,11 @@ a:hover { color: var(--primary-dark); }
     radial-gradient(circle at 50% 50%, rgba(16,185,129,0.1) 0%, transparent 50%);
   pointer-events: none;
 }
-.login-page::after {
-  content: '✈️ 🌍 🏖️ 🗺️ 🏔️ 🎒 🌅 🏛️';
-  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
-  font-size: 28px; letter-spacing: 20px; opacity: 0.4;
-  animation: floatEmoji 6s ease-in-out infinite; pointer-events: none;
-}
 @keyframes gradientShift {
   0%,100% { background-position: 0% 50%; }
   25% { background-position: 100% 0%; }
   50% { background-position: 100% 100%; }
   75% { background-position: 0% 100%; }
-}
-@keyframes floatEmoji {
-  0%,100% { transform: translateX(-50%) translateY(0); }
-  50% { transform: translateX(-50%) translateY(-10px); }
 }
 .login-card {
   background: rgba(255,255,255,0.92); backdrop-filter: blur(20px);
@@ -246,10 +236,7 @@ a:hover { color: var(--primary-dark); }
 .plan-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--border); }
 .plan-time { font-size: 12px; color: var(--text-light); }
 
-/* Profile */
-.profile-card { background: #fff; border-radius: var(--radius-xl); padding: 32px; max-width: 560px; box-shadow: var(--shadow-sm); border: 1px solid var(--border); }
-.profile-avatar-section { text-align: center; margin-bottom: 28px; }
-.profile-avatar { width: 80px; height: 80px; border-radius: 50%; background: var(--gradient-primary); display: inline-flex; align-items: center; justify-content: center; color: #fff; font-size: 36px; font-weight: 700; }
+/* Profile scoped */
 
 /* Empty state */
 .empty-state { text-align: center; padding: 60px 20px; color: var(--text-secondary); }

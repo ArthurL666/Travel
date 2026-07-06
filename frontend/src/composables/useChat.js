@@ -94,6 +94,7 @@ export function useChat() {
       const reader = response.body.getReader()
       const decoder = new TextDecoder()
       let buffer = ''
+      let dataLines = []   // 累积同一 SSE event 的多行 data:
 
       while (true) {
         const { done, value } = await reader.read()
@@ -105,23 +106,46 @@ export function useChat() {
 
         for (const line of lines) {
           const trimmed = line.trim()
+
           if (trimmed.startsWith('data:')) {
             const data = trimmed.substring(5).trim()
             if (data === '[DONE]') continue
-            if (data.startsWith('{')) {
-              // Spring AI 可能返回 JSON 事件
+            dataLines.push(data)             // 累积，保持换行
+          } else if (trimmed === '' && dataLines.length) {
+            // 空行 = SSE event 结束 → 用 \n 重拼接
+            const eventData = dataLines.join('\n')
+            dataLines = []
+
+            if (eventData.startsWith('{')) {
               try {
-                const json = JSON.parse(data)
+                const json = JSON.parse(eventData)
                 if (json.result?.output?.content) {
                   aiMsg.content += json.result.output.content
                 }
               } catch {
-                aiMsg.content += data
+                aiMsg.content += eventData
               }
             } else {
-              aiMsg.content += data
+              aiMsg.content += eventData
             }
           }
+        }
+      }
+
+      // 处理末尾残留（最后一段没有空行结尾）
+      if (dataLines.length) {
+        const eventData = dataLines.join('\n')
+        if (eventData.startsWith('{')) {
+          try {
+            const json = JSON.parse(eventData)
+            if (json.result?.output?.content) {
+              aiMsg.content += json.result.output.content
+            }
+          } catch {
+            aiMsg.content += eventData
+          }
+        } else {
+          aiMsg.content += eventData
         }
       }
     } catch (e) {

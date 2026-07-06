@@ -24,8 +24,15 @@
       <div class="login-card">
         <!-- 顶部品牌区 -->
         <div class="card-header">
-          <div class="brand-icon">✈️</div>
-          <h1 class="brand-title">AI 旅游助手</h1>
+          <div class="brand-icon">
+            <svg viewBox="0 0 64 64" width="52" height="52" xmlns="http://www.w3.org/2000/svg">
+              <rect x="2" y="2" width="60" height="60" rx="14" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+              <path d="M32 8 L44 36 L32 31 L20 36Z" fill="white" opacity="0.92"/>
+              <rect x="30" y="14" width="4" height="18" rx="2" fill="rgba(0,0,0,0.35)"/>
+              <circle cx="32" cy="46" r="4" fill="#FBBF24"/>
+            </svg>
+          </div>
+          <h1 class="brand-title">游伴AI</h1>
           <p class="brand-subtitle">说走就走的旅行，从一句话开始</p>
         </div>
 
