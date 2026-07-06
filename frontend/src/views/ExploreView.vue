@@ -282,14 +282,13 @@ function onCardLeave(name) {
 function openDestination(dest) {
   exploringCard.value = dest.name
   setTimeout(() => {
-    const q = `帮我规划去${dest.name}的行程`
-    router.push({ path: '/app/chat', query: { q } })
+    router.push(`/app/destination/${dest.slug || dest.name}`)
     exploringCard.value = null
   }, 300)
 }
 
 function handleFeaturedClick() {
-  router.push({ path: '/app/chat', query: { q: '推荐适合夏天去的海岛目的地' } })
+  router.push('/app/destination/马尔代夫')
 }
 
 // ─── Search ────────────────────────────────────────

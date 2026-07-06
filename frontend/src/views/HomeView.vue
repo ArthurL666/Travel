@@ -14,7 +14,6 @@
             <a class="nav-link" @click="goTo('/app/explore')">发现目的地</a>
             <a class="nav-link" @click="goTo('/app/plans')">我的行程</a>
             <a class="nav-link" @click="goTo('/app/inspiration')">旅行灵感</a>
-            <a class="nav-link" @click="goTo('/login')">联系我们</a>
           </div>
         </div>
         <div class="nav-right">

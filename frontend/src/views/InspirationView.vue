@@ -182,7 +182,7 @@
       <section class="ai-recommend">
         <div class="ai-recommend-bg" />
         <div class="ai-recommend-content">
-          <span class="ai-badge">🤖 AI 推荐</span>
+          <span class="ai-badge"><AiIcon :size="14" variant="primary" style="margin-right:4px" /> AI 推荐</span>
           <h2>为你量身推荐</h2>
           <p>告诉我你的旅行偏好，AI 为你精选最合适的灵感内容</p>
           <div class="ai-prefs">
@@ -206,6 +206,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
+import AiIcon from '../components/AiIcon.vue'
 
 const router = useRouter()
 const loading = ref(true)
@@ -225,6 +226,7 @@ const categories = [
 ]
 
 const featuredArticle = {
+  slug: 'iceland-road-trip',
   title: '一个人的冰岛自驾',
   summary: '在最孤独的公路驶向世界的尽头——冰岛环岛自驾 12 天全记录，遇见极光、冰川与黑沙滩的震撼',
   icon: '🌌',
@@ -239,29 +241,29 @@ const featuredArticle = {
 }
 
 const trendingArticles = [
-  { title: '京都赏枫全攻略',     rating: 4.8, views: '9.8k', icon: '🍁' },
-  { title: '巴厘岛隐藏版秘境',   rating: 4.9, views: '8.2k', icon: '🏝️' },
-  { title: '瑞士黄金列车之旅',   rating: 4.7, views: '7.6k', icon: '🚂' },
-  { title: '清迈慢生活日记',     rating: 4.8, views: '6.9k', icon: '🌴' },
-  { title: '巴黎最美咖啡馆巡礼', rating: 4.6, views: '5.4k', icon: '☕' },
+  { slug: 'kyoto-autumn-leaves', title: '京都赏枫全攻略',     rating: 4.8, views: '9.8k', icon: '🍁' },
+  { slug: 'bali-hidden-gems', title: '巴厘岛隐藏版秘境',   rating: 4.9, views: '8.2k', icon: '🏝️' },
+  { slug: 'switzerland-golden-pass', title: '瑞士黄金列车之旅',   rating: 4.7, views: '7.6k', icon: '🚂' },
+  { slug: 'chiangmai-slow-life', title: '清迈慢生活日记',     rating: 4.8, views: '6.9k', icon: '🌴' },
+  { slug: 'paris-cafe-guide', title: '巴黎最美咖啡馆巡礼', rating: 4.6, views: '5.4k', icon: '☕' },
 ]
 
 const collections = [
-  { icon: '🌸', title: '春日赏花指南', desc: '樱花、油菜花、薰衣草，赴一场花事之约', gradient: 'linear-gradient(135deg, #FFF1F2 0%, #FBCFE8 50%, #FDA4AF 100%)' },
-  { icon: '🍂', title: '秋日红叶物语', desc: '漫山红遍，层林尽染，寻找最美秋色',   gradient: 'linear-gradient(135deg, #FEF3C7 0%, #FCD34D 50%, #F59E0B 100%)' },
-  { icon: '❄️', title: '冬日雪境奇遇', desc: '雪国列车、极光小屋，许你一个白色童话', gradient: 'linear-gradient(135deg, #F1F5F9 0%, #CBD5E1 50%, #94A3B8 100%)' },
+  { icon: '🌸', slug: 'spring-blossom', title: '春日赏花指南', desc: '樱花、油菜花、薰衣草，赴一场花事之约', gradient: 'linear-gradient(135deg, #FFF1F2 0%, #FBCFE8 50%, #FDA4AF 100%)' },
+  { icon: '🍂', slug: 'autumn-red-leaves', title: '秋日红叶物语', desc: '漫山红遍，层林尽染，寻找最美秋色',   gradient: 'linear-gradient(135deg, #FEF3C7 0%, #FCD34D 50%, #F59E0B 100%)' },
+  { icon: '❄️', slug: 'winter-snow-wonderland', title: '冬日雪境奇遇', desc: '雪国列车、极光小屋，许你一个白色童话', gradient: 'linear-gradient(135deg, #F1F5F9 0%, #CBD5E1 50%, #94A3B8 100%)' },
 ]
 
 const wmedia = (url) => url
 const articles = [
-  { title: '迷失在清迈的慢时光',       icon: '🌴', image: pexels('32763116'),  gradient: 'linear-gradient(135deg, #D1FAE5 0%, #34D399 100%)',       summary: '在清迈的寺庙与夜市之间，找到了生活的另一种节奏',             tags: ['城市漫游', '文化'], readTime: 5,  likes: 234, size: 'tall',  location: '清迈' },
-  { title: '托斯卡纳的艳阳下',         icon: '🍷', image: pexels('32647226'),       gradient: 'linear-gradient(135deg, #FEF3C7 0%, #F59E0B 100%)',       summary: '意大利最美的乡村，葡萄酒庄与橄榄树的无尽夏日',             tags: ['美食', '自然'],   readTime: 7,  likes: 189, size: 'wide', location: '意大利' },
-  { title: '东京深夜食堂巡礼',         icon: '🍜', image: pexels('18848537'),  gradient: 'linear-gradient(135deg, #FCE7F3 0%, #F472B6 100%)',       summary: '从新宿到浅草，寻找那些藏在巷子深处的米其林味道',           tags: ['美食之旅'],       readTime: 4,  likes: 312, size: 'reg',  location: '东京' },
-  { title: '新西兰南岛房车之旅',       icon: '🚐', image: pexels('28142481'),       gradient: 'linear-gradient(135deg, #E0F2FE 0%, #38BDF8 100%)',       summary: '开着房车穿越中土世界，星空与冰川是每晚的标配',             tags: ['自然风光'],       readTime: 8,  likes: 267, size: 'tall',  location: '新西兰' },
-  { title: '摩洛哥迷城记',            icon: '🐪', image: pexels('30485125'),       gradient: 'linear-gradient(135deg, #FED7AA 0%, #FB923C 100%)',        summary: '在菲斯古城的一千零一夜里迷路，是最好的旅行方式',           tags: ['文化历史'],       readTime: 6,  likes: 156, size: 'reg',  location: '摩洛哥' },
-  { title: '大理洱海骑行环湖指南',     icon: '🚲', image: pexels('33970874'),       gradient: 'linear-gradient(135deg, #E0F2FE 0%, #7DD3FC 100%)',       summary: '120公里环湖路，苍山为伴，洱海为邻，遇见最美的云南',         tags: ['自然', '户外'],   readTime: 5,  likes: 198, size: 'reg',  location: '大理' },
-  { title: '西藏，离天堂最近的地方',    icon: '🏔️', image: wmedia('https://upload.wikimedia.org/wikipedia/commons/4/4f/Potala.jpg'), gradient: 'linear-gradient(135deg, #F3E8FF 0%, #A78BFA 100%)',      summary: '在海拔5000米的冈仁波齐，遇见最纯粹的自己',                 tags: ['自然风光', '文化'], readTime: 10, likes: 423, size: 'wide', location: '西藏' },
-  { title: '曼谷街头美食地图',         icon: '🌶️', image: pexels('33202938'),       gradient: 'linear-gradient(135deg, #FEE2E2 0%, #F87171 100%)',      summary: '从唐人街到考山路，50块钱吃遍曼谷最佳街头小吃',             tags: ['美食之旅'],       readTime: 3,  likes: 145, size: 'reg',  location: '曼谷' },
+  { slug: 'lost-in-chiangmai', title: '迷失在清迈的慢时光',       icon: '🌴', image: pexels('32763116'),  gradient: 'linear-gradient(135deg, #D1FAE5 0%, #34D399 100%)',       summary: '在清迈的寺庙与夜市之间，找到了生活的另一种节奏',             tags: ['城市漫游', '文化'], readTime: 5,  likes: 234, size: 'tall',  location: '清迈' },
+  { slug: 'tuscany-sun', title: '托斯卡纳的艳阳下',         icon: '🍷', image: pexels('32647226'),       gradient: 'linear-gradient(135deg, #FEF3C7 0%, #F59E0B 100%)',       summary: '意大利最美的乡村，葡萄酒庄与橄榄树的无尽夏日',             tags: ['美食', '自然'],   readTime: 7,  likes: 189, size: 'wide', location: '意大利' },
+  { slug: 'tokyo-night-food', title: '东京深夜食堂巡礼',         icon: '🍜', image: pexels('18848537'),  gradient: 'linear-gradient(135deg, #FCE7F3 0%, #F472B6 100%)',       summary: '从新宿到浅草，寻找那些藏在巷子深处的米其林味道',           tags: ['美食之旅'],       readTime: 4,  likes: 312, size: 'reg',  location: '东京' },
+  { slug: 'new-zealand-campervan', title: '新西兰南岛房车之旅',       icon: '🚐', image: pexels('28142481'),       gradient: 'linear-gradient(135deg, #E0F2FE 0%, #38BDF8 100%)',       summary: '开着房车穿越中土世界，星空与冰川是每晚的标配',             tags: ['自然风光'],       readTime: 8,  likes: 267, size: 'tall',  location: '新西兰' },
+  { slug: 'morocco-fez-maze', title: '摩洛哥迷城记',            icon: '🐪', image: pexels('30485125'),       gradient: 'linear-gradient(135deg, #FED7AA 0%, #FB923C 100%)',        summary: '在菲斯古城的一千零一夜里迷路，是最好的旅行方式',           tags: ['文化历史'],       readTime: 6,  likes: 156, size: 'reg',  location: '摩洛哥' },
+  { slug: 'dali-erhai-cycling', title: '大理洱海骑行环湖指南',     icon: '🚲', image: pexels('33970874'),       gradient: 'linear-gradient(135deg, #E0F2FE 0%, #7DD3FC 100%)',       summary: '120公里环湖路，苍山为伴，洱海为邻，遇见最美的云南',         tags: ['自然', '户外'],   readTime: 5,  likes: 198, size: 'reg',  location: '大理' },
+  { slug: 'tibet-holy-land', title: '西藏，离天堂最近的地方',    icon: '🏔️', image: wmedia('https://upload.wikimedia.org/wikipedia/commons/4/4f/Potala.jpg'), gradient: 'linear-gradient(135deg, #F3E8FF 0%, #A78BFA 100%)',      summary: '在海拔5000米的冈仁波齐，遇见最纯粹的自己',                 tags: ['自然风光', '文化'], readTime: 10, likes: 423, size: 'wide', location: '西藏' },
+  { slug: 'bangkok-street-food', title: '曼谷街头美食地图',         icon: '🌶️', image: pexels('33202938'),       gradient: 'linear-gradient(135deg, #FEE2E2 0%, #F87171 100%)',      summary: '从唐人街到考山路，50块钱吃遍曼谷最佳街头小吃',             tags: ['美食之旅'],       readTime: 3,  likes: 145, size: 'reg',  location: '曼谷' },
 ]
 
 const reviews = [
@@ -276,8 +278,8 @@ const aiPrefs = ['🏔️ 自然风光', '🏙️ 城市漫游', '🍜 美食达
 
 // ─── Methods ─────────────────────────────────────
 function openArticle(article) {
-  const q = `我想看关于${article.location || article.title}的旅行灵感`
-  router.push({ path: '/app/chat', query: { q } })
+  const s = article.slug || article.title
+  router.push('/app/article/' + encodeURIComponent(s))
 }
 
 function handleCategoryClick(cat) {
@@ -286,8 +288,7 @@ function handleCategoryClick(cat) {
 }
 
 function handleCollectionClick(col) {
-  const q = `推荐${col.title}相关的旅行目的地和攻略`
-  router.push({ path: '/app/chat', query: { q } })
+  router.push('/app/collection/' + col.slug)
 }
 
 function handleViewAll() {
