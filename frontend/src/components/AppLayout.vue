@@ -37,10 +37,10 @@ const auth = useAuthStore()
 const router = useRouter()
 
 const navItems = [
-  { path: '/chat', icon: '💬', label: 'AI 对话' },
-  { path: '/history', icon: '📋', label: '历史记录' },
-  { path: '/plans', icon: '🗺️', label: '我的行程' },
-  { path: '/profile', icon: '👤', label: '个人中心' }
+  { path: '/app/chat', icon: '💬', label: 'AI 规划' },
+  { path: '/app/explore', icon: '🗺️', label: '目的地探索' },
+  { path: '/app/plans', icon: '📋', label: '我的行程' },
+  { path: '/app/profile', icon: '👤', label: '个人中心' }
 ]
 
 function handleLogout() {

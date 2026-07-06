@@ -150,7 +150,8 @@ export function useChat() {
 
   /** Markdown 渲染 */
   function renderMd(text) {
-    return text ? marked.parse(text) : ''
+    if (!text) return ''
+    return marked.parse(text).replace(/\*\*/g, '')
   }
 
   /** 时间格式化 */

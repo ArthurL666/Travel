@@ -5,7 +5,9 @@ import AppLayout from '../components/AppLayout.vue'
 const routes = [
   {
     path: '/',
-    redirect: '/chat'
+    name: 'Home',
+    component: () => import('../views/HomeView.vue'),
+    meta: { guest: true }
   },
   {
     path: '/login',
@@ -14,7 +16,7 @@ const routes = [
     meta: { guest: true }
   },
   {
-    path: '/',
+    path: '/app',
     component: AppLayout,
     meta: { requiresAuth: true },
     children: [
@@ -24,9 +26,9 @@ const routes = [
         component: () => import('../views/ChatView.vue')
       },
       {
-        path: 'history',
-        name: 'History',
-        component: () => import('../views/HistoryView.vue')
+        path: 'explore',
+        name: 'Explore',
+        component: () => import('../views/ExploreView.vue')
       },
       {
         path: 'plans',
@@ -51,8 +53,10 @@ router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
   if (to.meta.requiresAuth && !auth.isLoggedIn) {
     next('/login')
-  } else if (to.meta.guest && auth.isLoggedIn) {
-    next('/chat')
+  } else if (to.meta.guest && auth.isLoggedIn && to.name === 'Home') {
+    next('/app/chat')
+  } else if (to.meta.guest && auth.isLoggedIn && to.name === 'Login') {
+    next('/app/chat')
   } else {
     next()
   }
