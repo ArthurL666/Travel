@@ -204,13 +204,14 @@ export function useChat() {
 
     try {
       const token = localStorage.getItem('token')
+      const apiKey = localStorage.getItem('deepseekApiKey') || ''
       const response = await fetch('/api/chat/stream', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Bearer ' + token
         },
-        body: JSON.stringify({ message: content }),
+        body: JSON.stringify({ message: content, apiKey: apiKey || undefined }),
         signal: abortController.value.signal
       })
 

@@ -8,6 +8,11 @@
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             历史
           </button>
+          <button class="btn btn-text btn-sm api-config-toggle" @click="showApiConfig = true" title="API 配置">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            API
+            <span v-if="hasApiKey" class="api-key-dot" title="已配置 API Key"></span>
+          </button>
           <span class="ai-badge">🟢 在线</span>
         </div>
       </div>
@@ -28,6 +33,38 @@
             <span class="history-item-role">{{ item.role === 'user' ? '👤' : '' }}<AiIcon v-if="item.role === 'assistant'" :size="18" variant="primary" /></span>
             <span class="history-item-text">{{ truncate(item.content, 60) }}</span>
             <span class="history-item-time">{{ fmtTime(item.createTime) }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- API 配置弹窗 -->
+      <div v-if="showApiConfig" class="modal-overlay" @click.self="showApiConfig = false">
+        <div class="modal-card">
+          <div class="modal-header">
+            <h3>🔑 API 配置</h3>
+            <button class="modal-close" @click="showApiConfig = false">&times;</button>
+          </div>
+          <div class="modal-body">
+            <p class="modal-desc">请输入你的 DeepSeek API Key，AI 将使用你的 Key 进行对话。<br>Key 仅保存在本地浏览器，不会上传到服务器。</p>
+            <div class="form-group">
+              <label>DeepSeek API Key</label>
+              <div class="api-key-input-row">
+                <input
+                  :type="showApiKeyText ? 'text' : 'password'"
+                  v-model="apiKeyInput"
+                  placeholder="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+                  class="api-key-input"
+                />
+                <button class="btn btn-text btn-icon" @click="showApiKeyText = !showApiKeyText" :title="showApiKeyText ? '隐藏' : '显示'">
+                  {{ showApiKeyText ? '🙈' : '👁️' }}
+                </button>
+              </div>
+            </div>
+            <p class="modal-hint">🔗 还没有 Key？<a href="https://platform.deepseek.com/api_keys" target="_blank" rel="noopener">去 DeepSeek 官网获取</a></p>
+          </div>
+          <div class="modal-footer">
+            <button v-if="hasApiKey" class="btn btn-outline btn-sm" @click="clearApiKey">清除 Key</button>
+            <button class="btn" :class="apiKeyInput.trim() ? 'btn-primary' : 'btn-outline'" :disabled="!apiKeyInput.trim()" @click="saveApiKey">保存</button>
           </div>
         </div>
       </div>
@@ -114,6 +151,34 @@ const showHistory = ref(false)
 const historyList = ref([])
 const historyLoading = ref(false)
 const skipAutoScroll = ref(false)
+
+// ===== API Key 配置状态 =====
+const showApiConfig = ref(false)
+const apiKeyInput = ref('')
+const showApiKeyText = ref(false)
+const hasApiKey = ref(false)
+
+function loadApiKey() {
+  const saved = localStorage.getItem('deepseekApiKey')
+  hasApiKey.value = !!saved
+}
+
+function saveApiKey() {
+  const key = apiKeyInput.value.trim()
+  if (!key) return
+  localStorage.setItem('deepseekApiKey', key)
+  hasApiKey.value = true
+  showApiConfig.value = false
+  toast.success('✅ API Key 已保存（仅本地存储）')
+}
+
+function clearApiKey() {
+  localStorage.removeItem('deepseekApiKey')
+  hasApiKey.value = false
+  apiKeyInput.value = ''
+  showApiConfig.value = false
+  toast.info('已清除 API Key')
+}
 
 async function loadHistory() {
   historyLoading.value = true
@@ -215,12 +280,21 @@ watch(showHistory, (val) => {
 onMounted(() => {
   init()
   scrollTo(msgContainer.value)
+  loadApiKey()
   // 从首页/目的地带入的文字 → 填入输入框
   const q = route.query.q
   if (q) {
     nextTick(() => {
       input.value = q
     })
+  }
+})
+
+// 打开 API 配置弹窗时，自动填入已保存的 Key
+watch(showApiConfig, (val) => {
+  if (val) {
+    apiKeyInput.value = localStorage.getItem('deepseekApiKey') || ''
+    showApiKeyText.value = false
   }
 })
 
@@ -414,6 +488,77 @@ watch(messages, () => {
 @keyframes blink {
   0%, 100% { opacity: 1; }
   50% { opacity: 0; }
+}
+
+/* ===== API 配置弹窗 ===== */
+.api-config-toggle {
+  position: relative;
+}
+.api-key-dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--success);
+  display: inline-block;
+  animation: dotPulse 2s ease-in-out infinite;
+}
+@keyframes dotPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 1000;
+  background: rgba(0,0,0,0.4);
+  backdrop-filter: blur(4px);
+  display: flex; align-items: center; justify-content: center;
+  animation: fadeIn 0.2s ease-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
+}
+.modal-card {
+  background: #fff; border-radius: var(--radius-xl);
+  width: 460px; max-width: 90vw;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+  animation: modalSlideUp 0.25s ease-out;
+  overflow: hidden;
+}
+@keyframes modalSlideUp {
+  from { opacity: 0; transform: translateY(20px) scale(0.97); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 0;
+}
+.modal-header h3 { font-size: 18px; font-weight: 700; }
+.modal-close {
+  background: none; border: none; font-size: 28px;
+  color: var(--text-light); cursor: pointer;
+  line-height: 1; padding: 0 4px;
+}
+.modal-close:hover { color: var(--text); }
+.modal-body { padding: 16px 24px; }
+.modal-desc {
+  font-size: 13px; color: var(--text-secondary);
+  line-height: 1.6; margin-bottom: 16px;
+}
+.modal-hint {
+  font-size: 12px; color: var(--text-light); margin-top: 8px;
+}
+.modal-hint a { color: var(--primary); font-weight: 500; }
+.modal-footer {
+  display: flex; align-items: center; justify-content: flex-end;
+  gap: 12px; padding: 12px 24px 20px;
+}
+
+.api-key-input-row {
+  display: flex; gap: 8px;
+}
+.api-key-input {
+  flex: 1;
+}
+.api-key-input-row .btn-icon {
+  flex-shrink: 0; font-size: 18px;
 }
 
 </style>
