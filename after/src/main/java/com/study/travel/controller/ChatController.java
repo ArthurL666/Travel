@@ -105,7 +105,7 @@ public class ChatController {
         Long userId = getUserId(auth);
         String username = auth != null ? auth.getName() : "anonymous";
         String conversationId = "conv_" + username;
-        return agentService.chatStream(request.getMessage(), userId, conversationId, request.getApiKey());
+        return agentService.chatStream(request.getMessage(), userId, conversationId);
     }
 
     @PostMapping
@@ -114,7 +114,7 @@ public class ChatController {
         Long userId = getUserId(auth);
         String username = auth != null ? auth.getName() : "anonymous";
         String conversationId = "conv_" + username;
-        String response = agentService.chat(request.getMessage(), userId, conversationId, request.getApiKey());
+        String response = agentService.chat(request.getMessage(), userId, conversationId);
         ChatResponse chatResp = new ChatResponse("assistant", response,
                 LocalDateTime.now().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         return ResponseEntity.ok(ApiResult.success(chatResp));
