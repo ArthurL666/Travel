@@ -162,7 +162,7 @@ mvn spring-boot:run
 
 后端默认启动在 **`http://localhost:8081`**。
 
-> API Key 已配置在 `application.properties` 中，默认使用 DeepSeek 接口。如需更换 Key，直接编辑该文件中的 `spring.ai.openai.api-key` 字段。
+> API Key 通过环境变量 `DEEPSEEK_API_KEY` 注入，默认使用 DeepSeek 接口。启动前请设置环境变量，或在 `application.properties` 中直接替换 `spring.ai.openai.api-key` 的值。
 
 ### 🚀 启动前端（开发模式）
 
@@ -502,7 +502,11 @@ app.jwt.expiration=86400000
 
 # LLM — OpenAI 兼容协议（默认 DeepSeek）
 spring.ai.openai.base-url=https://api.deepseek.com
-spring.ai.openai.api-key=sk-your-key-here
+# 方式一：通过环境变量注入（推荐）
+# 设置环境变量 DEEPSEEK_API_KEY=your-api-key
+spring.ai.openai.api-key=${DEEPSEEK_API_KEY}
+# 方式二：直接填写（不推荐）
+# spring.ai.openai.api-key=sk-your-key-here
 spring.ai.openai.chat.options.model=deepseek-v4-flash
 spring.ai.openai.chat.options.temperature=0.7
 spring.ai.openai.chat.options.max-tokens=2000
@@ -553,7 +557,7 @@ spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 
 ### Q: 启动后端需要配置 API Key 吗？
 
-**A:** 需要。`application.properties` 中的 `spring.ai.openai.api-key` 需要替换为你自己的 DeepSeek API Key。可在 [platform.deepseek.com](https://platform.deepseek.com/api_keys) 获取。
+**A:** 需要。需设置环境变量 `DEEPSEEK_API_KEY` 为你的 DeepSeek API Key，可在 [platform.deepseek.com](https://platform.deepseek.com/api_keys) 获取。或在 `application.properties` 中直接填写 key。
 
 ### Q: 更换 API Key 后需要重新编译吗？
 
