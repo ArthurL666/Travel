@@ -1,15 +1,21 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
   server: {
+    host: '0.0.0.0',
     port: 3000,
+    allowedHosts: ['trave123-web.cpolar.cn'],
     proxy: {
       '/api': {
-        target: 'http://localhost:8081',
+        target: 'https://trave123.cpolar.cn',
         changeOrigin: true
+      },
+      '/proxy-img': {
+        target: 'https://',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/proxy-img\//, '')
       }
     }
   }
